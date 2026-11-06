@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@font-face {
+  font-family: 'Market Sans';
+  src: url('/fonts/MarketSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Market Sans';
+  src: url('/fonts/MarketSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-sans: 'Market Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-eb-ink: #191919;
+  --color-eb-grey: #707070;
+  --color-eb-mid: #c7c7c7;
+  --color-eb-line: #e5e5e5;
+  --color-eb-surface: #f7f7f7;
+  --color-eb-blue: #0968f6;
+  --color-eb-green: #288034;
+  --color-eb-red: #d50b0b;
+  --color-eb-violet: #3b1fc6;
+  --color-eb-dark: #363636;
+  --color-eb-pale-red: #ffdede;
+
+  --shadow-eb-float: 0 5px 17px rgba(0, 0, 0, 0.2), 0 2px 7px rgba(0, 0, 0, 0.15);
+  --shadow-eb-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #e9eaec;
+  color: #191919;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid #0968f6;
+  outline-offset: 2px;
+}
+
+@keyframes eb-shimmer {
+  0% {
+    background-position: -240px 0;
+  }
+  100% {
+    background-position: 240px 0;
+  }
+}
+
+.eb-shimmer {
+  background-color: #e5e5e5;
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  background-size: 240px 100%;
+  background-repeat: no-repeat;
+  animation: eb-shimmer 1.1s linear infinite;
+}
+
+@keyframes eb-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.eb-pop {
+  animation: eb-pop 120ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eb-shimmer {
+    animation: none;
+  }
+  .eb-pop {
+    animation: none;
+  }
+}
+
+.eb-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c7c7c7 transparent;
+}
