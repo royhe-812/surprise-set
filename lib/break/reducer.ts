@@ -14,6 +14,7 @@ export type Action =
   | { type: 'TICK'; dt: number }
   | { type: 'START'; id: number }
   | { type: 'END_AUCTION'; id: number }
+  | { type: 'SKIP_TIMER' }
   | { type: 'BUY_BIN'; id: number }
   | { type: 'RANDOMIZE'; id: number }
   | { type: 'ASSIGN'; id: number; spot: string }
@@ -228,6 +229,21 @@ export function reducer(state: BreakState, action: Action): BreakState {
       } else {
         sell(s, l, l.live.leader, l.live.bid)
       }
+      return s
+    }
+
+    case 'SKIP_TIMER': {
+      const s = clone(state)
+      const l = s.listings.find((x) => x.phase === 'live' && x.live)
+      if (!l || !l.live) return state
+      if (l.live.bids === 0) {
+        // Nothing to sell with zero bids, so a skipped auction still closes with a winner
+        l.live.bid = 1 + Math.floor(rand(s) * 3)
+        l.live.bids = 1
+        l.live.leader = pickOne(s, BUYERS)
+      }
+      l.live.remaining = 0
+      sell(s, l, l.live.leader, l.live.bid)
       return s
     }
 

@@ -4,6 +4,7 @@ import { BrowserChrome } from '@/components/console/browser-chrome'
 import { ChatPanel } from '@/components/console/chat-panel'
 import { PageHeader } from '@/components/console/page-header'
 import { PrototypeControls } from '@/components/console/prototype-controls'
+import { SkipBar } from '@/components/console/skip-bar'
 import { StreamPanel } from '@/components/console/stream-panel'
 import { TopNav } from '@/components/console/top-nav'
 
@@ -11,9 +12,10 @@ export default function Page() {
   return (
     <BreakProvider>
       <div className="overflow-x-auto p-4">
+        <SkipBar />
         <div className="mx-auto min-w-[1280px] max-w-[1440px] overflow-hidden rounded-2xl bg-white shadow-eb-float">
           <BrowserChrome />
-          <div className="h-[calc(100dvh-32px-80px)] min-h-[640px] overflow-y-auto bg-white">
+          <div className="h-[calc(100dvh-32px-80px-40px)] min-h-[640px] overflow-y-auto bg-white">
             <TopNav />
             <div className="relative overflow-hidden">
               <div aria-hidden className="pointer-events-none absolute inset-0">
