@@ -7,7 +7,7 @@ import {
   LISTING_TITLE,
   TEAMS,
 } from './data'
-import type { BreakPhase, BreakState, ChatKind, Listing, SpotFilter } from './types'
+import type { ActivityKind, BreakPhase, BreakState, ChatKind, Listing, SpotFilter } from './types'
 import { assignedSpotSet, formatPrice, takenSpots } from './selectors'
 
 export type Action =
@@ -18,6 +18,7 @@ export type Action =
   | { type: 'BUY_BIN'; id: number }
   | { type: 'RANDOMIZE'; id: number }
   | { type: 'ASSIGN'; id: number; spot: string }
+  | { type: 'UNASSIGN'; id: number; spot: string }
   | { type: 'PICK'; id: number; spot: string }
   | { type: 'REMOVE_ASSIGNMENT'; id: number; spot?: string }
   | { type: 'NAV'; index: number }
@@ -84,6 +85,8 @@ export function initialState(): BreakState {
     speed: 1,
     chat: INITIAL_CHAT,
     chatId: 100,
+    activity: [],
+    activityId: 1,
   }
 }
 
@@ -101,6 +104,19 @@ function pickOne<T>(s: BreakState, list: T[]): T {
 
 function pushChat(s: BreakState, kind: ChatKind, user: string, text?: string) {
   s.chat = [...s.chat, { id: s.chatId++, kind, user, text, atMin: s.clock }]
+}
+
+function logActivity(
+  s: BreakState,
+  kind: ActivityKind,
+  l: Listing,
+  extra: { spot?: string; price?: number } = {},
+) {
+  if (!l.sale) return
+  s.activity = [
+    ...s.activity,
+    { id: s.activityId++, kind, listingId: l.id, buyer: l.sale.buyer, atMin: s.clock, ...extra },
+  ]
 }
 
 export function hasActive(s: BreakState): boolean {
@@ -131,6 +147,7 @@ function sell(s: BreakState, l: Listing, buyer: string, price: number) {
   l.flash = null
   l.sale = { buyer, price, atMin: s.clock, paid: false, paidIn: 1500 + rand(s) * 1500 }
   pushChat(s, 'seller', HOST, `Sold! #${String(l.id).padStart(3, '0')} to @${buyer} for ${formatPrice(price)}`)
+  logActivity(s, 'won', l, { price })
   wipeStaleResults(s, l.id)
 }
 
@@ -158,6 +175,7 @@ function finishSpin(s: BreakState, l: Listing, auto: boolean) {
 function announce(s: BreakState, l: Listing, spot: string) {
   if (!l.sale) return
   pushChat(s, 'seller', HOST, `${spot} goes to @${l.sale.buyer}!`)
+  logActivity(s, 'assigned', l, { spot })
 }
 
 function clone(state: BreakState): BreakState {
@@ -278,13 +296,30 @@ export function reducer(state: BreakState, action: Action): BreakState {
       return s
     }
 
+    case 'UNASSIGN': {
+      const s = clone(state)
+      const l = s.listings.find((x) => x.id === action.id)
+      const r = l?.results.find((x) => x.spot === action.spot)
+      if (!l || !r || !r.assigned) return state
+      r.assigned = false
+      logActivity(s, 'unassigned', l, { spot: r.spot })
+      return s
+    }
+
     case 'PICK': {
       const s = clone(state)
       const l = s.listings.find((x) => x.id === action.id)
       if (!l || l.phase !== 'sold' || !l.sale?.paid) return state
-      if (takenSpots(s).has(action.spot)) return state
-      l.results = [...l.results.filter((r) => r.assigned), { spot: action.spot, assigned: true, auto: false }]
-      l.rand = { status: 'result', spinIn: 0 }
+      const existing = l.results.find((r) => r.spot === action.spot)
+      if (existing?.assigned) return state
+      if (existing) {
+        existing.assigned = true
+      } else {
+        if (takenSpots(s).has(action.spot)) return state
+        // A picked spot is added next to any randomized results, never in place of them
+        l.results = [...l.results, { spot: action.spot, assigned: true, auto: false, picked: true }]
+      }
+      if (l.rand.status === 'idle') l.rand = { status: 'result', spinIn: 0 }
       l.flagged = false
       l.wiped = false
       announce(s, l, action.spot)
@@ -295,6 +330,11 @@ export function reducer(state: BreakState, action: Action): BreakState {
       const s = clone(state)
       const l = s.listings.find((x) => x.id === action.id)
       if (!l) return state
+      for (const r of l.results) {
+        if (r.assigned && (action.spot === undefined || r.spot === action.spot)) {
+          logActivity(s, 'unassigned', l, { spot: r.spot })
+        }
+      }
       l.results = l.results.filter((r) => !r.assigned || (action.spot !== undefined && r.spot !== action.spot))
       if (l.results.length === 0) l.rand = { status: 'idle', spinIn: 0 }
       l.autoRandomize = false
@@ -394,6 +434,9 @@ export function reducer(state: BreakState, action: Action): BreakState {
         }
         l.results = [{ spot: order[i], assigned: true, auto: false }]
         l.rand = { status: 'result', spinIn: 0 }
+        s.clock = l.sale.atMin
+        logActivity(s, 'won', l, { price: l.sale.price })
+        logActivity(s, 'assigned', l, { spot: order[i] })
       }
       s.index = Math.min(n, s.listings.length - 1)
       s.clock = 26 + n

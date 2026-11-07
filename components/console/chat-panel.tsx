@@ -1,14 +1,16 @@
 'use client'
 
-import { Search, Settings } from 'lucide-react'
+import { Check, Gavel, Search, Settings, Undo2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { HOST } from '@/lib/break/data'
-import { formatTime } from '@/lib/break/selectors'
+import { formatPrice, formatTime, pad3 } from '@/lib/break/selectors'
+import type { ActivityKind } from '@/lib/break/types'
 import { useBreak } from '@/components/break/break-provider'
 import { Switch } from '@/components/break/primitives'
 import { cn } from '@/lib/utils'
 
 const TABS = ['Chat', 'Activity', 'Tools'] as const
+const ACTIVITY_ICON: Record<ActivityKind, typeof Check> = { won: Gavel, assigned: Check, unassigned: Undo2 }
 const FILTERS = ['All', 'Questions', 'Bookmarked', 'Users', 'Following']
 
 export function ChatPanel() {
@@ -17,6 +19,11 @@ export function ChatPanel() {
   const [filter, setFilter] = useState('All')
   const endRef = useRef<HTMLDivElement>(null)
   const scrollerRef = useRef<HTMLDivElement>(null)
+
+  const [seen, setSeen] = useState(0)
+  useEffect(() => {
+    if (tab === 'Activity') setSeen(state.activity.length)
+  }, [tab, state.activity.length])
 
   useEffect(() => {
     const el = scrollerRef.current
@@ -30,7 +37,8 @@ export function ChatPanel() {
     if (filter === 'Following') return m.kind === 'follow'
     return true
   })
-  const activity = state.chat.filter((m) => m.kind === 'seller' || m.kind === 'system')
+  const activity = state.activity
+  const unread = tab === 'Activity' ? 0 : Math.max(0, activity.length - seen)
   const allAuto = state.listings.every((l) => l.phase === 'sold' || l.autoRandomize)
 
   return (
@@ -51,9 +59,10 @@ export function ChatPanel() {
             )}
           >
             {t}
-            {t === 'Activity' && (
-              <span className="absolute -top-2 -right-4 grid size-5 place-items-center rounded-full bg-eb-red text-[11px] font-bold text-white">
-                9
+            {t === 'Activity' && unread > 0 && (
+              <span className="absolute -top-2 -right-4 grid min-w-5 place-items-center rounded-full bg-eb-red px-1 text-[11px] leading-5 font-bold text-white">
+                <span aria-hidden>{unread > 99 ? '99+' : unread}</span>
+                <span className="sr-only">{unread} new activity</span>
               </span>
             )}
           </button>
@@ -118,14 +127,48 @@ export function ChatPanel() {
         )}
 
         {tab === 'Activity' && (
-          <ul className="eb-scroll flex-1 space-y-4 overflow-y-auto px-4 py-5">
-            {activity.length === 0 && <li className="text-sm text-eb-grey">No activity yet.</li>}
-            {[...activity].reverse().map((m) => (
-              <li key={m.id} className="border-b border-eb-line pb-3 text-sm">
-                <p className="text-xs text-eb-grey">{formatTime(m.atMin)}</p>
-                <p>{m.text}</p>
-              </li>
-            ))}
+          <ul className="eb-scroll flex-1 overflow-y-auto px-4 py-2">
+            {activity.length === 0 && <li className="py-3 text-sm text-eb-grey">No activity yet.</li>}
+            {[...activity].reverse().map((a) => {
+              const Icon = ACTIVITY_ICON[a.kind]
+              return (
+                <li key={a.id} className="flex items-start gap-3 border-b border-eb-line py-3">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'mt-0.5 grid size-8 shrink-0 place-items-center rounded-full',
+                      a.kind === 'won' && 'bg-eb-surface text-eb-ink',
+                      a.kind === 'assigned' && 'bg-[#e6f4ea] text-eb-green',
+                      a.kind === 'unassigned' && 'bg-[#fdeaea] text-eb-red',
+                    )}
+                  >
+                    <Icon className="size-4" />
+                  </span>
+                  <div className="min-w-0 flex-1 text-base leading-6">
+                    <p className="text-eb-ink">
+                      {a.kind === 'won' && (
+                        <>
+                          <b>{a.buyer}</b> won <b>#{pad3(a.listingId)}</b> for <b>{formatPrice(a.price ?? 0)}</b>
+                        </>
+                      )}
+                      {a.kind === 'assigned' && (
+                        <>
+                          <b className="text-eb-green">{a.spot}</b> assigned to <b>{a.buyer}</b>
+                          <span className="text-eb-grey"> · #{pad3(a.listingId)}</span>
+                        </>
+                      )}
+                      {a.kind === 'unassigned' && (
+                        <>
+                          <b className="text-eb-red">{a.spot}</b> unassigned from <b>{a.buyer}</b>
+                          <span className="text-eb-grey"> · #{pad3(a.listingId)}</span>
+                        </>
+                      )}
+                    </p>
+                    <p className="text-sm text-eb-grey">{formatTime(a.atMin)}</p>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         )}
 

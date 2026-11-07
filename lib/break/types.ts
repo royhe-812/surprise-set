@@ -1,4 +1,16 @@
-export type Result = { spot: string; assigned: boolean; auto: boolean }
+export type Result = { spot: string; assigned: boolean; auto: boolean; picked?: boolean }
+
+export type ActivityKind = 'won' | 'assigned' | 'unassigned'
+
+export type ActivityEntry = {
+  id: number
+  kind: ActivityKind
+  listingId: number
+  buyer: string
+  spot?: string
+  price?: number
+  atMin: number
+}
 
 export type Phase = 'unsold' | 'live' | 'sold'
 
@@ -50,6 +62,8 @@ export type BreakState = {
   speed: number
   chat: ChatMessage[]
   chatId: number
+  activity: ActivityEntry[]
+  activityId: number
 }
 
 export type SpotAssignment = {

@@ -27,9 +27,14 @@ function ResultRow({ listing, spot, assigned }: { listing: Listing; spot: string
     <div className="flex min-h-12 items-center justify-between gap-2 rounded-lg bg-white px-3 py-2">
       <span className={cn('truncate text-sm font-bold', assigned ? 'text-eb-green' : 'text-eb-ink')}>{spot}</span>
       {assigned ? (
-        <span className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-eb-green px-4 text-sm font-bold text-white">
+        <button
+          type="button"
+          aria-label={`Unassign ${spot}`}
+          onClick={() => dispatch({ type: 'UNASSIGN', id: listing.id, spot })}
+          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-eb-green px-4 text-sm font-bold text-white hover:bg-[#1f6a2b]"
+        >
           <Check className="size-4" aria-hidden /> Assigned
-        </span>
+        </button>
       ) : (
         <button
           type="button"
@@ -148,7 +153,8 @@ export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id
   const spinning = listing.rand.status === 'spinning'
   const anotherLive = state.listings.some((l) => l.phase === 'live' && l.id !== listing.id)
   const paid = !!listing.sale?.paid
-  const lastAuto = listing.results.length > 0 && listing.results[listing.results.length - 1].auto
+  const allPicked = listing.results.length > 0 && listing.results.every((r) => r.picked)
+  const lastAuto = [...listing.results].reverse().find((r) => !r.picked)?.auto ?? false
   const flashPrice = listing.flash
     ? Math.round(listing.binPrice - (listing.binPrice * listing.flash.pct) / 100)
     : listing.binPrice
@@ -311,7 +317,9 @@ export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id
                   ) : listing.flagged ? (
                     <Notice>Listing needs spot assignment</Notice>
                   ) : (
-                    listing.results.length > 0 && <Eyebrow>{lastAuto ? 'Auto randomized' : 'Randomized'}</Eyebrow>
+                    listing.results.length > 0 && (
+                      <Eyebrow>{allPicked ? 'Picked' : lastAuto ? 'Auto randomized' : 'Randomized'}</Eyebrow>
+                    )
                   )}
                   {listing.results.map((r) => (
                     <ResultRow key={r.spot} listing={listing} spot={r.spot} assigned={r.assigned} />
