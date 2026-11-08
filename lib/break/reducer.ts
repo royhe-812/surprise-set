@@ -163,8 +163,8 @@ function finishSpin(s: BreakState, l: Listing, auto: boolean) {
     return
   }
   const spot = pickOne(s, available)
-  // The previous unassigned roll stays on screen during the spin, then gives way to the new one
-  l.results = [...l.results.filter((r) => r.assigned), { spot, assigned: auto, auto }]
+  // Every earlier roll (assigned or not) stays; a new roll is appended, never swapped in
+  l.results = [...l.results, { spot, assigned: auto, auto }]
   l.rand = { status: 'result', spinIn: 0 }
   if (auto) {
     l.flagged = false
@@ -279,8 +279,8 @@ export function reducer(state: BreakState, action: Action): BreakState {
       const s = clone(state)
       const l = s.listings.find((x) => x.id === action.id)
       if (!l || l.phase !== 'sold' || !l.sale?.paid || l.rand.status === 'spinning') return state
-  l.wiped = false
-  startSpin(l)
+      l.wiped = false
+      startSpin(l)
       return s
     }
 
