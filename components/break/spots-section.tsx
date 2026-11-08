@@ -89,7 +89,7 @@ export function SpotsSection() {
     <section aria-label="Spots in break" className="px-4 pb-4">
       <div className="flex items-center gap-2 pt-1 pb-1">
         <div className="min-w-0 flex-1">
-          <h2 className="text-base leading-5 font-bold text-eb-ink">Spots in break ({total})</h2>
+          <h2 className="text-base leading-5 font-bold text-eb-ink">Spots in break ({allAssigned ? total : left})</h2>
           <Eyebrow>{allAssigned ? 'All spots assigned' : `${left} left to assign`}</Eyebrow>
         </div>
 

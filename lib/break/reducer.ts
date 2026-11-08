@@ -79,7 +79,7 @@ export function initialState(): BreakState {
     breakPhase: 'idle',
     showListings: null,
     pinned: true,
-    filter: 'available',
+    filter: 'all',
     seed: 20260611,
     clock: 52,
     speed: 1,
