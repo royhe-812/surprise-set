@@ -303,7 +303,7 @@ export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id
 
           {paid && (spinning || listing.results.length > 0 || listing.flagged) && (
             <div className="flex flex-col gap-2 rounded-lg bg-eb-surface p-2">
-              {spinning ? (
+              {spinning && listing.results.length === 0 ? (
                 <>
                   <Eyebrow>{listing.autoRandomize ? 'Auto randomizing' : 'Randomizing'}</Eyebrow>
                   <div aria-label="Randomizing" role="status" className="eb-shimmer h-12 rounded-lg" />
@@ -324,6 +324,9 @@ export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id
                   {listing.results.map((r) => (
                     <ResultRow key={r.spot} listing={listing} spot={r.spot} assigned={r.assigned} />
                   ))}
+                  {spinning && (
+                    <div aria-label="Randomizing" role="status" className="eb-shimmer h-12 rounded-lg" />
+                  )}
                 </>
               )}
             </div>
