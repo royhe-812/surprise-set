@@ -222,7 +222,8 @@ export function reducer(state: BreakState, action: Action): BreakState {
         }
         if (l.rand.status === 'spinning') {
           l.rand.spinIn -= dt
-          if (l.rand.spinIn <= 0) finishSpin(s, l, l.autoRandomize)
+          // Only the opening roll is auto-assigned; "Randomize another" always waits for the seller
+          if (l.rand.spinIn <= 0) finishSpin(s, l, l.autoRandomize && l.results.length === 0)
         }
       }
       return s
