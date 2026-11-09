@@ -39,18 +39,18 @@ export function GroupHeader() {
     ) : null
 
   return (
-    <section aria-label="Case break group" className="flex gap-4 border-b border-eb-line px-4 pt-4 pb-2">
+    <section aria-label="Surprise set group" className="flex gap-4 border-b border-eb-line px-4 pt-4 pb-2">
       <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-black/20">
         <Image
-          src="/figma/select-2024.png"
-          alt="2024 Panini Select Football box, live break"
-          width={522}
-          height={446}
+          src="/figma/surprise-watch.png"
+          alt="Luxury wristwatch with a blue dial"
+          width={1024}
+          height={768}
           className="size-full object-cover"
         />
         <span aria-hidden className="absolute top-2 left-2 size-[18px] rounded-[5px] border border-eb-mid bg-white" />
         <span className="absolute bottom-2 left-2 rounded-lg bg-eb-violet px-2 py-1 text-[10px] leading-3 font-bold tracking-[0.5px] text-white uppercase">
-          Case break
+          Surprise set
         </span>
       </div>
 

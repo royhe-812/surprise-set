@@ -13,7 +13,7 @@ export function PageHeader() {
       </div>
 
       <div className="mt-[41px] flex items-center gap-4 pl-[16px]">
-        <h1 className="text-[28px] leading-[48px] font-bold text-eb-ink">Friday case breaks!</h1>
+        <h1 className="text-[28px] leading-[48px] font-bold text-eb-ink">Friday watch surprise sets!</h1>
         <button
           type="button"
           aria-label="Event options"

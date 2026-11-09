@@ -89,7 +89,7 @@ export function StreamPanel() {
               <div className="min-w-0">
                 <p className="line-clamp-2 text-xs leading-4">
                   {state.pinned ? `#${pad3(listing.id)} · ` : ''}
-                  {listing.title.replace('PICK YOUR TEAM', 'Pick your team')}
+                  {listing.title}
                 </p>
                 <p className="mt-1 text-sm">
                   <b>{formatPrice(price)}</b> <span className="text-xs text-white/70">+ Free shipping</span>

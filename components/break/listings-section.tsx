@@ -82,7 +82,7 @@ function FlashDealForm({ listing, onClose }: { listing: Listing; onClose: () => 
   )
 }
 
-export function ListingsSection({ onPick }: { onPick: (id: number) => void }) {
+export function ListingsSection() {
   const { state, dispatch, summary } = useBreak()
   const listing = state.listings[state.index]
   const [flashFor, setFlashFor] = useState<number | null>(null)
@@ -122,7 +122,7 @@ export function ListingsSection({ onPick }: { onPick: (id: number) => void }) {
         {showFlash ? (
           <FlashDealForm listing={listing} onClose={() => setFlashFor(null)} />
         ) : (
-          <ListingCard key={listing.id} listing={listing} onPick={onPick} />
+          <ListingCard key={listing.id} listing={listing} />
         )}
 
         <button

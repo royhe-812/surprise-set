@@ -145,7 +145,7 @@ function ListingMenu({ listing }: { listing: Listing }) {
   )
 }
 
-export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id: number) => void }) {
+export function ListingCard({ listing }: { listing: Listing }) {
   const { state, dispatch } = useBreak()
   const [showBuyer, setShowBuyer] = useState(false)
   const assigned = assignedSpots(listing)
@@ -341,9 +341,6 @@ export function ListingCard({ listing, onPick }: { listing: Listing; onPick: (id
                 className={outlineBtn}
               >
                 {listing.results.length > 0 ? 'Randomize another' : 'Randomize'}
-              </button>
-              <button type="button" disabled={spinning} onClick={() => onPick(listing.id)} className={outlineBtn}>
-                Pick spot
               </button>
             </div>
           )}

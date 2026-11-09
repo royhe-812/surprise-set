@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Stream manager – Friday case breaks! | eBay Live',
+  title: 'Stream manager – Friday watch surprise sets! | eBay Live',
   description:
-    'eBay Live host console for running a random case break: sell listings, randomize or pick spots, and track assignments.',
+    'eBay Live host console for running a watch surprise set: sell listings, randomize the reveal, and track assignments.',
   generator: 'v0.app',
 }
 

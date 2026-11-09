@@ -40,7 +40,7 @@ function AddSpot() {
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Free agents"
+            placeholder="e.g. Rolex Explorer"
             className="h-10 rounded-lg border border-eb-grey px-3 text-sm outline-none focus-visible:border-eb-blue"
           />
           <button
@@ -86,10 +86,10 @@ export function SpotsSection() {
   }
 
   return (
-    <section aria-label="Spots in break" className="px-4 pb-4">
+    <section aria-label="Surprise set list" className="px-4 pb-4">
       <div className="flex items-center gap-2 pt-1 pb-1">
         <div className="min-w-0 flex-1">
-          <h2 className="text-base leading-5 font-bold text-eb-ink">Spots in break ({allAssigned ? total : left})</h2>
+          <h2 className="text-base leading-5 font-bold text-eb-ink">Surprise set list ({allAssigned ? total : left})</h2>
           <Eyebrow>{allAssigned ? 'All spots assigned' : `${left} left to assign`}</Eyebrow>
         </div>
 

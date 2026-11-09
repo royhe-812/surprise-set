@@ -1,36 +1,36 @@
-export const TEAMS = [
-  'Arizona Cardinals',
-  'Atlanta Falcons',
-  'Baltimore Ravens',
-  'Buffalo Bills',
-  'Carolina Panthers',
-  'Chicago Bears',
-  'Cincinnati Bengals',
-  'Cleveland Browns',
-  'Dallas Cowboys',
-  'Denver Broncos',
-  'Detroit Lions',
-  'Green Bay Packers',
-  'Houston Texans',
-  'Indianapolis Colts',
-  'Jacksonville Jaguars',
-  'Kansas City Chiefs',
-  'Las Vegas Raiders',
-  'Los Angeles Chargers',
-  'Los Angeles Rams',
-  'Miami Dolphins',
-  'Minnesota Vikings',
-  'New England Patriots',
-  'New Orleans Saints',
-  'New York Giants',
-  'New York Jets',
-  'Philadelphia Eagles',
-  'Pittsburgh Steelers',
-  'San Francisco 49ers',
-  'Seattle Seahawks',
-  'Tampa Bay Buccaneers',
-  'Tennessee Titans',
-  'Washington Commanders',
+export const WATCHES = [
+  'Rolex Submariner Date',
+  'Rolex Daytona',
+  'Rolex GMT-Master II',
+  'Rolex Datejust 41',
+  'Omega Speedmaster Moonwatch',
+  'Omega Seamaster 300M',
+  'Omega Constellation',
+  'Patek Philippe Nautilus 5711',
+  'Patek Philippe Calatrava',
+  'Audemars Piguet Royal Oak',
+  'Audemars Piguet Royal Oak Offshore',
+  'Cartier Santos',
+  'Cartier Tank Must',
+  'Cartier Ballon Bleu',
+  'Tudor Black Bay 58',
+  'Tudor Pelagos',
+  'TAG Heuer Monaco',
+  'TAG Heuer Carrera',
+  'Breitling Navitimer',
+  'Breitling Superocean Heritage',
+  'IWC Portugieser Chronograph',
+  'IWC Big Pilot',
+  'Jaeger-LeCoultre Reverso',
+  'Vacheron Constantin Overseas',
+  'Panerai Luminor Marina',
+  'Hublot Big Bang',
+  'Richard Mille RM 011',
+  'Zenith El Primero',
+  'Grand Seiko Snowflake',
+  'A. Lange & Söhne Lange 1',
+  'Longines Legend Diver',
+  'Nomos Glashütte Tangente',
 ]
 
 export const BUYERS = [
@@ -49,9 +49,9 @@ export const BUYERS = [
   'griffeycollector89',
 ]
 
-export const LISTING_TITLE = '2023 PANINI CHRONICLES DRAFT PICKS FOOTBALL 4 BOX BREAK #F1195 - PICK YOUR TEAM'
+export const LISTING_TITLE = 'Sick Watches surprise set!'
 
-export const BREAK_TITLE = 'PYT 2024 PANINI SELECT FOOTBALL 1 BOX BREAK #F1195'
+export const BREAK_TITLE = 'Sick Watches surprise set!'
 
 export const BREAK_NUMBER = '002'
 

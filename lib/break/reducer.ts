@@ -5,7 +5,7 @@ import {
   BUYERS,
   HOST,
   LISTING_TITLE,
-  TEAMS,
+  WATCHES,
 } from './data'
 import type { ActivityKind, BreakPhase, BreakState, ChatKind, Listing, SpotFilter } from './types'
 import { assignedSpotSet, formatPrice, takenSpots } from './selectors'
@@ -74,7 +74,7 @@ function makeListing(id: number): Listing {
 export function initialState(): BreakState {
   return {
     listings: Array.from({ length: 32 }, (_, i) => makeListing(i + 1)),
-    spots: [...TEAMS],
+    spots: [...WATCHES],
     index: 0,
     breakPhase: 'idle',
     showListings: null,
