@@ -154,7 +154,6 @@ export function ListingCard({ listing }: { listing: Listing }) {
   const anotherLive = state.listings.some((l) => l.phase === 'live' && l.id !== listing.id)
   const paid = !!listing.sale?.paid
   const allPicked = listing.results.length > 0 && listing.results.every((r) => r.picked)
-  const lastAuto = [...listing.results].reverse().find((r) => !r.picked)?.auto ?? false
   const flashPrice = listing.flash
     ? Math.round(listing.binPrice - (listing.binPrice * listing.flash.pct) / 100)
     : listing.binPrice
@@ -318,7 +317,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
                     <Notice>Listing needs spot assignment</Notice>
                   ) : (
                     listing.results.length > 0 && (
-                      <Eyebrow>{allPicked ? 'Picked' : lastAuto ? 'Auto randomized' : 'Randomized'}</Eyebrow>
+                      <Eyebrow>{allPicked ? 'Picked' : 'Randomized'}</Eyebrow>
                     )
                   )}
                   {listing.results.map((r) => (
@@ -332,7 +331,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
             </div>
           )}
 
-          {paid && !(listing.autoRandomize && spinning && listing.results.length === 0) && (
+          {paid && listing.results.length === 0 && !(listing.autoRandomize && spinning) && (
             <div className="flex gap-2">
               <button
                 type="button"
@@ -340,7 +339,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
                 onClick={() => dispatch({ type: 'RANDOMIZE', id: listing.id })}
                 className={outlineBtn}
               >
-                {listing.results.length > 0 ? 'Randomize another' : 'Randomize'}
+                Randomize and assign
               </button>
             </div>
           )}
