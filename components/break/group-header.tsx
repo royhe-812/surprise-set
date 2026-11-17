@@ -28,7 +28,6 @@ export function GroupHeader() {
   const progress = total ? (assignedCount / total) * 100 : 0
   const autoAll = state.listings.every((l) => l.phase === 'sold' || l.autoRandomize)
 
-  const showStart = phase === 'idle' && assignedCount >= 1
   const pill =
     phase === 'breaking' ? (
       <StatusPill tone="green">Breaking now</StatusPill>
@@ -65,15 +64,6 @@ export function GroupHeader() {
           </span>
           <span className="flex-1" />
 
-          {showStart && (
-            <button
-              type="button"
-              onClick={() => dispatch({ type: 'SET_BREAK_PHASE', value: 'breaking' })}
-              className="h-8 rounded-full bg-eb-blue px-4 text-sm font-bold text-white hover:bg-[#0654c4]"
-            >
-              Start breaking
-            </button>
-          )}
           {phase === 'breaking' && (
             <button
               type="button"
@@ -103,17 +93,6 @@ export function GroupHeader() {
                 {assignedCount === 0 && (
                   <MenuItem icon={<Pencil className="size-4" />} onClick={close}>
                     Edit
-                  </MenuItem>
-                )}
-                {phase === 'idle' && assignedCount >= 1 && (
-                  <MenuItem
-                    icon={<Video className="size-4" />}
-                    onClick={() => {
-                      dispatch({ type: 'SET_BREAK_PHASE', value: 'breaking' })
-                      close()
-                    }}
-                  >
-                    Start breaking
                   </MenuItem>
                 )}
                 {phase === 'breaking' && (
