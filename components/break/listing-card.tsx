@@ -1,13 +1,13 @@
 'use client'
 
-import { Check, ChevronDown, ChevronRight, CircleX, Gift, Pencil, Skull, Trash2, Zap, ShoppingCart } from 'lucide-react'
+import { Check, ChevronDown, ChevronRight, CircleX, Skull, Zap } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { AUCTION_SECONDS } from '@/lib/break/data'
 import { assignedSpots, formatPrice, formatTime, pad3 } from '@/lib/break/selectors'
 import type { Listing } from '@/lib/break/types'
 import { cn } from '@/lib/utils'
 import { useBreak } from './break-provider'
-import { Eyebrow, Menu, MenuItem, MenuSwitchItem, Switch } from './primitives'
+import { Eyebrow, Switch } from './primitives'
 
 const outlineBtn =
   'inline-flex h-8 flex-1 items-center justify-center rounded-full border border-eb-blue bg-white px-4 text-sm text-eb-blue hover:bg-[#f2f7ff] disabled:border-eb-line disabled:text-eb-mid disabled:hover:bg-white'
@@ -48,103 +48,6 @@ function ResultRow({ listing, spot, assigned }: { listing: Listing; spot: string
   )
 }
 
-function ListingMenu({ listing }: { listing: Listing }) {
-  const { dispatch } = useBreak()
-  const assigned = assignedSpots(listing)
-  return (
-    <Menu label={`Options for listing ${pad3(listing.id)}`} width={256}>
-      {(close) => {
-        if (listing.format === 'bin' && listing.phase === 'unsold') {
-          return (
-            <>
-              <MenuSwitchItem
-                icon={<ShoppingCart className="size-4" />}
-                label="Purchasable"
-                checked={listing.purchasable}
-                onChange={(value) => dispatch({ type: 'SET_PURCHASABLE', id: listing.id, value })}
-              />
-              <MenuItem icon={<Pencil className="size-4" />} onClick={close}>
-                Edit
-              </MenuItem>
-              <MenuItem
-                icon={<Zap className="size-4" />}
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('flash-deal', { detail: listing.id }))
-                  close()
-                }}
-              >
-                Flash deal
-              </MenuItem>
-              <MenuItem danger icon={<Trash2 className="size-4" />} onClick={close}>
-                Remove from event
-              </MenuItem>
-            </>
-          )
-        }
-        if (listing.phase === 'live') {
-          return (
-            <>
-              <MenuSwitchItem
-                icon={<Gift className="size-4" />}
-                label="Auto randomize & assign"
-                checked={listing.autoRandomize}
-                onChange={(value) => dispatch({ type: 'SET_AUTO', id: listing.id, value })}
-              />
-              <MenuItem
-                danger
-                icon={<CircleX className="size-4" />}
-                onClick={() => {
-                  dispatch({ type: 'END_AUCTION', id: listing.id })
-                  close()
-                }}
-              >
-                End auction
-              </MenuItem>
-            </>
-          )
-        }
-        if (listing.phase === 'sold') {
-          if (assigned.length === 0) return <p className="px-3 py-2 text-sm text-eb-grey">No assignments to remove</p>
-          return (
-            <MenuItem
-              danger
-              icon={<CircleX className="size-4" />}
-              onClick={() => {
-                dispatch({ type: 'REMOVE_ASSIGNMENT', id: listing.id })
-                close()
-              }}
-            >
-              {assigned.length > 1 ? 'Remove assignments' : 'Remove assignment'}
-            </MenuItem>
-          )
-        }
-        return (
-          <>
-            <MenuSwitchItem
-              icon={<Skull className="size-4" />}
-              label="Sudden death"
-              checked={listing.suddenDeath}
-              onChange={(value) => dispatch({ type: 'SET_SUDDEN_DEATH', id: listing.id, value })}
-            />
-            <MenuSwitchItem
-              icon={<Gift className="size-4" />}
-              label="Auto randomize & assign"
-              checked={listing.autoRandomize}
-              onChange={(value) => dispatch({ type: 'SET_AUTO', id: listing.id, value })}
-            />
-            <MenuItem icon={<Pencil className="size-4" />} onClick={close}>
-              Edit
-            </MenuItem>
-            <MenuItem danger icon={<Trash2 className="size-4" />} onClick={close}>
-              Remove from event
-            </MenuItem>
-          </>
-        )
-      }}
-    </Menu>
-  )
-}
-
 export function ListingCard({ listing }: { listing: Listing }) {
   const { state, dispatch } = useBreak()
   const [showBuyer, setShowBuyer] = useState(false)
@@ -180,7 +83,6 @@ export function ListingCard({ listing }: { listing: Listing }) {
           <span className="text-eb-ink">#{pad3(listing.id)}</span>
           <span className="text-eb-grey"> - {listing.title}</span>
         </p>
-        <ListingMenu listing={listing} />
       </div>
 
       <div className="flex items-end justify-between gap-2">
