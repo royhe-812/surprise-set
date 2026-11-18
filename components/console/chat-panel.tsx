@@ -182,7 +182,7 @@ export function ChatPanel() {
               className="flex w-full items-center justify-between rounded-lg border border-eb-line p-4 text-left"
             >
               <span>
-                <span className="block text-base font-bold">Auto-randomize all</span>
+                <span className="block text-base font-bold">Auto randomize &amp; assign</span>
                 <span className="block text-sm text-eb-grey">Assign a random spot as soon as each listing is paid for.</span>
               </span>
               <Switch checked={allAuto} />

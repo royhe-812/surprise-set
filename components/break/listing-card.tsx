@@ -86,7 +86,7 @@ function ListingMenu({ listing }: { listing: Listing }) {
             <>
               <MenuSwitchItem
                 icon={<Gift className="size-4" />}
-                label="Auto-randomize all"
+                label="Auto randomize & assign"
                 checked={listing.autoRandomize}
                 onChange={(value) => dispatch({ type: 'SET_AUTO', id: listing.id, value })}
               />
@@ -128,7 +128,7 @@ function ListingMenu({ listing }: { listing: Listing }) {
             />
             <MenuSwitchItem
               icon={<Gift className="size-4" />}
-              label="Auto-randomize all"
+              label="Auto randomize & assign"
               checked={listing.autoRandomize}
               onChange={(value) => dispatch({ type: 'SET_AUTO', id: listing.id, value })}
             />

@@ -109,7 +109,7 @@ export function GroupHeader() {
                 {!allAssigned && phase === 'idle' && (
                   <MenuSwitchItem
                     icon={<Gift className="size-4" />}
-                    label="Auto-randomize all"
+                    label="Auto randomize & assign"
                     checked={autoAll}
                     onChange={(value) => dispatch({ type: 'SET_AUTO_ALL', value })}
                   />
